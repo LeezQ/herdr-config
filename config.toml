@@ -1,0 +1,52 @@
+onboarding = false
+[ui]
+agent_panel_sort = "spaces"
+
+show_agent_labels_on_pane_borders = true
+# 单 pane 也画边框，这样 pane-id-label 插件写的 "wM:p3 · claude" 标签在每个 workspace 都可见
+pane_borders = "always"
+pane_outer_borders = true
+status_indicators = "symbols"
+
+# 左侧 Space（项目）列表布局
+[ui.sidebar.spaces]
+# 项目之间空一行（终端按整行计，1 是 0 之上的最小间距）
+row_gap = 1
+# 第一行项目名加粗；第二行放 state_text（idle/working 等，始终有值），
+# 这样非 git 项目的第二行不会被折叠，所有项目高度一致
+rows = [
+  ["state_icon", { token = "workspace", bold = true }],
+  # $state 由 local.working-spinner 插件写入，代替内置 state_text：
+  # working 时是转动的 braille spinner（橙色加粗），其它状态显示 idle/done/blocked 文字
+  [
+    { token = "$state", fg = "#f5a623", bold = true, rules = [
+      { equals = "idle",    fg = "#8fa876", bold = false },
+      { equals = "done",    fg = "#7fbf7f", bold = false },
+      { equals = "blocked", fg = "#e06c75", bold = true },
+      { equals = "unknown", fg = "#6c7086", bold = false, dim = true },
+    ] },
+    "branch",
+    "git_status",
+  ],
+]
+
+[keys]
+# Option+1..9 直接按侧栏编号切换 workspace（Ghostty 已开启 macos-option-as-alt）
+switch_workspace = "alt+1..9"
+
+[ui.sound]
+enabled = false
+
+[ui.toast]
+delivery = "system"
+
+[theme]
+name = "terminal"
+auto_switch = false
+
+# reviewr 插件：prefix+d 切换 diff 审阅面板（d = diff）
+[[keys.command]]
+key = "prefix+d"
+type = "plugin_action"
+command = "persiyanov.reviewr.toggle"
+description = "reviewr: toggle diff review pane"

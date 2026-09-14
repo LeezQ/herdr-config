@@ -1,0 +1,2 @@
+# GitHub 插件清单：每行 "owner/repo[@ref]"，install.sh 会逐个 herdr plugin install
+persiyanov/herdr-reviewr@c49220f04a2cd7c24218a684d3f5c86177a38429

@@ -1,0 +1,27 @@
+# working-spinner：给侧栏里处于 working 状态的项目加一个转动的 braille spinner。
+# 原理：后台循环读 `herdr agent list`，对有 working agent 的 workspace 写入自定义 token `$spin`，
+# 侧栏行布局里引用 "$spin" 即可显示。token 带 ttl，daemon 一旦退出 spinner 会自动消失。
+
+id = "local.working-spinner"
+name = "Working Spinner"
+version = "0.1.0"
+min_herdr_version = "0.8.0"
+description = "侧栏 working 状态显示动态 spinner（自定义 token $spin）"
+platforms = ["macos", "linux"]
+
+# server 启动后拉起常驻进程；进程自带 pid 锁，重复触发不会起第二个
+[[startup]]
+command = ["python3", "spinner.py"]
+
+# 手动启动（比如刚 link 完还没重启 server 时）：herdr plugin action invoke local.working-spinner.start
+[[actions]]
+id = "start"
+title = "Spinner: 启动侧栏 working 动画"
+contexts = ["global"]
+command = ["python3", "spinner.py"]
+
+[[actions]]
+id = "stop"
+title = "Spinner: 停止侧栏 working 动画"
+contexts = ["global"]
+command = ["python3", "spinner.py", "--stop"]

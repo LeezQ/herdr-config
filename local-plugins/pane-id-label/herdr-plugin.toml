@@ -1,0 +1,33 @@
+# pane-id-label：把每个 pane 的 id（如 wM:p3）显示在 pane 边框上，方便跨 pane 用 herdr CLI 互相操作。
+# label 格式："<pane_id> · <agent>"，没有 agent 时只显示 pane_id。
+
+id = "local.pane-id-label"
+name = "Pane ID Label"
+version = "0.1.0"
+min_herdr_version = "0.8.0"
+description = "在每个 pane 边框上显示它的 pane id 和 agent 名"
+platforms = ["macos", "linux"]
+
+# server 启动、会话恢复后跑一次
+[[startup]]
+command = ["python3", "sync.py"]
+
+# 手动触发：herdr plugin action invoke local.pane-id-label.sync
+[[actions]]
+id = "sync"
+title = "Pane ID: 刷新所有 pane 的 id 标签"
+contexts = ["global"]
+command = ["python3", "sync.py"]
+
+# 这些事件之后 pane id 或 agent 可能变化，重新同步一遍
+[[events]]
+on = "pane.created"
+command = ["python3", "sync.py"]
+
+[[events]]
+on = "pane.moved"
+command = ["python3", "sync.py"]
+
+[[events]]
+on = "pane.agent_detected"
+command = ["python3", "sync.py"]
